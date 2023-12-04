@@ -75,11 +75,25 @@ class Program
 
                     }
                 case "2":
-                    List<Product> sortedList = prod.OrderBy(prod => prod.Price).ToList();
+
+                    List<Product> sortedList = prod.OrderBy(prod => prod.Location).ThenBy(prod => prod.ParsedDate).ToList();
                     Console.WriteLine("");
                     Console.WriteLine("Category".PadRight(20) + "Brand".PadRight(20) + "Model".PadRight(20) + "Location".PadRight(20) + "Date".PadRight(20) + "Price");
                     foreach (Product product in sortedList)
-                    { Console.WriteLine(product.Category.PadRight(20) + product.Brand.PadRight(20) + product.Model.PadRight(20) + product.Location.PadRight(20) + product.ParsedDate.ToString("dd/MM/yy").PadRight(20) + product.Price); }
+                    {
+                        ConsoleColor origColor = Console.ForegroundColor;
+                        int timeAfterPurchase = (DateTime.Now.Year - product.ParsedDate.Year) * 12 + (DateTime.Now.Month - product.ParsedDate.Month);
+                        if (timeAfterPurchase > 33)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        }
+                        else if (timeAfterPurchase >= 30 && timeAfterPurchase <= 33)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        }
+                        Console.WriteLine(product.Category.PadRight(20) + product.Brand.PadRight(20) + product.Model.PadRight(20) + product.Location.PadRight(20) + product.ParsedDate.ToString("dd/MM/yy").PadRight(20) + product.Price);
+                        Console.ForegroundColor = origColor;
+                    }
                     Console.WriteLine("");
                     int totalPrice = prod.Sum(prod => prod.Price);
                     Console.WriteLine("The total price for your products is:   " + totalPrice);
