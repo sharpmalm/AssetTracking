@@ -35,7 +35,7 @@ class Program
                         Console.WriteLine("You must enter a model name. Enter a model name and press enter");
                         break;
                     }
-                    Console.WriteLine("Enter an office location (London, Miami or Rio) and press enter.");
+                    Console.WriteLine("Enter an office location (London, Stockholm or Rio) and press enter.");
                     string location = Console.ReadLine();
                     if (location.Equals(""))
                     {
@@ -57,14 +57,30 @@ class Program
                             Console.WriteLine("Invalid date format. Enter a date in the format dd/MM/yy and press enter.");
                             break;
                         }
-
-                        Console.WriteLine("Enter price and press enter.");
+                        Console.WriteLine("Enter the price in dollars and press enter.");
                         string wrongInput = Console.ReadLine();
                         int price;
                         if (int.TryParse(wrongInput, out price))
                         {
                             Console.WriteLine("Price has been entered");
-                            prod.Add(new Product(category, brand, model, location, parsedDate, price));
+                            double localPrice = 0.0;
+                            switch (location)
+                            {
+                                case "Rio":
+                                    localPrice = price * 4.94;
+                                    break;
+                                case "London":
+                                    localPrice = price * 0.79;
+                                    break;
+                                case "Stockholm":
+                                    localPrice = price * 10.45;
+                                    break;
+                                default:
+                                    Console.WriteLine("Invalid location entered.");
+                                    break;
+                            }
+
+                            prod.Add(new Product(category, brand, model, location, parsedDate, price, localPrice));
                             break;
                         }
                         else
@@ -78,7 +94,7 @@ class Program
 
                     List<Product> sortedList = prod.OrderBy(prod => prod.Location).ThenBy(prod => prod.ParsedDate).ToList();
                     Console.WriteLine("");
-                    Console.WriteLine("Category".PadRight(20) + "Brand".PadRight(20) + "Model".PadRight(20) + "Location".PadRight(20) + "Date".PadRight(20) + "Price");
+                    Console.WriteLine("Category".PadRight(20) + "Brand".PadRight(20) + "Model".PadRight(20) + "Location".PadRight(20) + "Date".PadRight(20) + "Price" + "Price (local currency)");
                     foreach (Product product in sortedList)
                     {
                         ConsoleColor origColor = Console.ForegroundColor;
@@ -91,7 +107,7 @@ class Program
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
                         }
-                        Console.WriteLine(product.Category.PadRight(20) + product.Brand.PadRight(20) + product.Model.PadRight(20) + product.Location.PadRight(20) + product.ParsedDate.ToString("dd/MM/yy").PadRight(20) + product.Price);
+                        Console.WriteLine(product.Category.PadRight(20) + product.Brand.PadRight(20) + product.Model.PadRight(20) + product.Location.PadRight(20) + product.ParsedDate.ToString("dd/MM/yy").PadRight(20) + product.Price + product.LocalPrice);
                         Console.ForegroundColor = origColor;
                     }
                     Console.WriteLine("");
@@ -132,7 +148,7 @@ class Program
 
 class Product
     {
-        public Product(string category, string brand, string model, string location, DateTime parsedDate, int price)
+        public Product(string category, string brand, string model, string location, DateTime parsedDate, int price, double LocalPrice)
         {
             Category = category;
             Brand = brand;
@@ -140,6 +156,7 @@ class Product
             Location = location;
             ParsedDate = parsedDate;
             Price = price;
+            LocalPrice = LocalPrice;
         }
         public string Category { get; set; }
         public string Brand { get; set; }
@@ -147,4 +164,6 @@ class Product
         public string Location { get; set; }
         public DateTime ParsedDate { get; set; }
         public int Price { get; set; }
+        public double LocalPrice { get; set; }
+        
     }
