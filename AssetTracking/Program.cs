@@ -14,7 +14,7 @@ class Program
             switch (input)
             {
                 case "1":
-                    Console.WriteLine("Enter product category and press enter.");
+                    Console.WriteLine("Enter product category (computer or mobile phone) and press enter.");
                     string category = Console.ReadLine();
                     if (category.Equals(""))
                     {
@@ -42,7 +42,7 @@ class Program
                         Console.WriteLine("You must enter an office location. Enter a location and press enter");
                         break;
                     }
-                    Console.WriteLine("Enter date in the format dd/MM/yy and press enter.");
+                    Console.WriteLine("Enter the purchase date in the format dd/MM/yy and press enter.");
                     string date = Console.ReadLine();
                     if (date.Equals(""))
                     {
